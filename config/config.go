@@ -46,7 +46,7 @@ func (c *Config) initLog() {
 	os.MkdirAll("./log/", 0777)
 	logs.EnableFuncCallDepth(true)
 	logs.SetLogFuncCallDepth(3)
-	filename := "./log/returncode.log"
+	filename := "./log/dq.log"
 	logs.SetLogger("file", `{"filename":"`+filename+`","maxdays":7}`)
 	logs.SetLevel(logs.LevelDebug)
 }

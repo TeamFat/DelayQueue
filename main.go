@@ -28,7 +28,7 @@ func main() {
 	}
 
 	// Set gin mode.
-	gin.SetMode(viper.GetString("runmode"))
+	gin.SetMode(viper.GetString("runMode"))
 
 	// Create the Gin engine.
 	g := gin.New()
@@ -58,7 +58,7 @@ func main() {
 
 // pingServer pings the http server to make sure the router is working.
 func pingServer() error {
-	for i := 0; i < viper.GetInt("max_ping_count"); i++ {
+	for i := 0; i < viper.GetInt("maxPingCount"); i++ {
 		// Ping the server by sending a GET request to `/health`.
 		resp, err := http.Get(viper.GetString("url") + "/sd/health")
 		if err == nil && resp.StatusCode == 200 {

@@ -1,5 +1,10 @@
-runmode: debug               # 开发模式, debug, release, test
-addr: :8080                  # HTTP绑定端口
-name: returncode-httpserver  # API Server的名字
-url: http://127.0.0.1:8080   # pingServer函数请求的API服务器的ip:port
-max_ping_count: 10           # pingServer函数try的次数
+runMode: debug                # 开发模式, debug, release, test
+addr: :8080                   # HTTP绑定端口
+name: DelayQueue              # API Server的名字
+url: http://127.0.0.1:8080    # pingServer函数请求的API服务器的ip:port
+maxPingCount: 10              # pingServer函数try的次数
+redisKeyPrefix: DelayQueue_   # redis前缀
+bucketCount: 4                # bucket数量
+redisInfo: 127.0.0.1:6379     # redis信息
+redisDb: 2                    # redis db
+redisAuth: 123456             # redis auth(如果不需密码则置空)
