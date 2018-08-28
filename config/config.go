@@ -7,10 +7,12 @@ import (
 	"github.com/spf13/viper"
 )
 
+//Config 配置文件结构体
 type Config struct {
 	Name string
 }
 
+//Init 配置启动函数
 func Init(cfg string) error {
 	c := Config{
 		Name: cfg,
