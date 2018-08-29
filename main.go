@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/TeamFat/DelayQueue/config"
+	"github.com/TeamFat/DelayQueue/pkg/redis"
 	"github.com/TeamFat/DelayQueue/router"
 
 	"github.com/astaxie/beego/logs"
@@ -24,6 +25,11 @@ func main() {
 
 	// init config
 	if err := config.Init(*cfg); err != nil {
+		panic(err)
+	}
+
+	// init redis pool
+	if err := redis.ConnRedis(); err != nil {
 		panic(err)
 	}
 
@@ -69,5 +75,5 @@ func pingServer() error {
 		logs.Info("Waiting for the router, retry in 1 second.")
 		time.Sleep(time.Second)
 	}
-	return errors.New("Cannot connect to the router.")
+	return errors.New("cannot connect to the router")
 }

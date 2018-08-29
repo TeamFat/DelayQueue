@@ -1,10 +1,19 @@
-runMode: debug                # 开发模式, debug, release, test
-addr: :8080                   # HTTP绑定端口
-name: DelayQueue              # API Server的名字
-url: http://127.0.0.1:8080    # pingServer函数请求的API服务器的ip:port
-maxPingCount: 10              # pingServer函数try的次数
-redisKeyPrefix: DelayQueue_   # redis前缀
-bucketCount: 4                # bucket数量
-redisInfo: 127.0.0.1:6379     # redis信息
-redisDb: 2                    # redis db
-redisAuth: 123456             # redis auth(如果不需密码则置空)
+runMode: debug                  # 开发模式, debug, release, test
+addr: :8080                     # HTTP绑定端口
+name: DelayQueue                # API Server的名字
+url: http://127.0.0.1:8080      # pingServer函数请求的API服务器的ip:port
+maxPingCount: 10                # pingServer函数try的次数
+redisKeyPrefix: DelayQueue_     # redis前缀
+bucketCount: 4                  # bucket数量
+redis:
+  redisInfo: 127.0.0.1:6379     # redis ip:port
+  redisDb: 2                    # redis db
+  redisAuth: 123456             # redis auth(如果不需密码则置空)
+  maxIdle: 1                    # 最大空闲连接数
+  connectTimeout: 10            # 连接超时(秒)
+  readTimeout: 100              # 读超时(秒)
+  writeTimeout: 100             # 写超时(秒)
+  idleTimeout: 60               # 空闲连接超时(秒)
+log:
+  days: 7                       # 日志留存天数
+  filename: dq.log              # 日志文件名
