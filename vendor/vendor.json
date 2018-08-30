@@ -219,6 +219,18 @@
 			"revisionTime": "2018-08-13T09:23:08Z"
 		},
 		{
+			"checksumSHA1": "okf5tufF3GaATKGUlaf8bqqKudw=",
+			"path": "github.com/vmihailenco/msgpack",
+			"revision": "b5e691b1eb52a28c05e67ab9df303626c095c23b",
+			"revisionTime": "2018-06-13T09:15:15Z"
+		},
+		{
+			"checksumSHA1": "OX9c7+ZT+WWV7AunRHLn0+HvTtY=",
+			"path": "github.com/vmihailenco/msgpack/codes",
+			"revision": "b5e691b1eb52a28c05e67ab9df303626c095c23b",
+			"revisionTime": "2018-06-13T09:15:15Z"
+		},
+		{
 			"checksumSHA1": "ZerpiXZfy0zb96H+zhsChN+1iYA=",
 			"path": "golang.org/x/sys/unix",
 			"revision": "11551d06cbcc94edc80a0facaccbda56473c19c1",
