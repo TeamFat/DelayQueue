@@ -3,6 +3,7 @@ package router
 import (
 	"net/http"
 
+	"github.com/TeamFat/DelayQueue/handler/dq"
 	"github.com/TeamFat/DelayQueue/handler/sd"
 	"github.com/TeamFat/DelayQueue/router/middleware"
 
@@ -29,6 +30,12 @@ func Load(g *gin.Engine, mw ...gin.HandlerFunc) *gin.Engine {
 		svcd.GET("/disk", sd.DiskCheck)
 		svcd.GET("/cpu", sd.CPUCheck)
 		svcd.GET("/ram", sd.RAMCheck)
+	}
+
+	dqrouter := g.Group("queue")
+	{
+		dqrouter.POST("push", dq.Push)
+		dqrouter.POST("pop", dq.Pop)
 	}
 
 	return g
