@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/TeamFat/DelayQueue/config"
+	"github.com/TeamFat/DelayQueue/handler/dq"
 	"github.com/TeamFat/DelayQueue/pkg/redis"
 	"github.com/TeamFat/DelayQueue/router"
 
@@ -32,6 +33,9 @@ func main() {
 	if err := redis.ConnRedis(); err != nil {
 		panic(err)
 	}
+
+	// init delay queue
+	dq.Init()
 
 	// Set gin mode.
 	gin.SetMode(viper.GetString("runMode"))

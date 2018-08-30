@@ -3,7 +3,9 @@ addr: :8080                     # HTTP绑定端口
 name: DelayQueue                # API Server的名字
 url: http://127.0.0.1:8080      # pingServer函数请求的API服务器的ip:port
 maxPingCount: 10                # pingServer函数try的次数
-redisKeyPrefix: DelayQueue_     # redis前缀
+bucketKeyPrefix: DelayBucket_   # redis键前缀
+queueKeyPrefix: DelayQueue_     # reids键前缀
+jobKeyPrefix: DelayJob_         # redis键前缀
 bucketCount: 4                  # bucket数量
 redis:
   redisInfo: 127.0.0.1:6379     # redis ip:port
