@@ -51,6 +51,18 @@
 			"revisionTime": "2018-07-20T23:31:16Z"
 		},
 		{
+			"checksumSHA1": "5lMzZtb4uUo+N/J+cK7LqwR6bQQ=",
+			"path": "github.com/gomodule/redigo/internal",
+			"revision": "2cd21d9966bf7ff9ae091419744f0b3fb0fecace",
+			"revisionTime": "2018-06-27T14:45:07Z"
+		},
+		{
+			"checksumSHA1": "7LBPojy3Jduic8tFDejR9xei/z0=",
+			"path": "github.com/gomodule/redigo/redis",
+			"revision": "2cd21d9966bf7ff9ae091419744f0b3fb0fecace",
+			"revisionTime": "2018-06-27T14:45:07Z"
+		},
+		{
 			"checksumSHA1": "35UiDOE3TlLfiuF+EFu5HB2dGF8=",
 			"path": "github.com/hashicorp/hcl",
 			"revision": "ef8a98b0bbce4a65b5aa4c368430a80ddc533168",
@@ -243,5 +255,5 @@
 			"revisionTime": "2018-03-28T19:50:20Z"
 		}
 	],
-	"rootPath": "returncode-httpserver"
+	"rootPath": "github.com/TeamFat/DelayQueue"
 }
