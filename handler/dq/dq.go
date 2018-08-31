@@ -3,20 +3,66 @@ package dq
 import (
 	"fmt"
 	"net/http"
+	"strings"
 	"time"
 
+	. "github.com/TeamFat/DelayQueue/handler"
+	"github.com/TeamFat/DelayQueue/pkg/errno"
 	"github.com/astaxie/beego/logs"
 	"github.com/gin-gonic/gin"
+	"github.com/satori/go.uuid"
 	"github.com/spf13/viper"
 )
+
+type jobPush struct {
+	Topic string `json:"topic" binding:"required"`
+	Delay int64  `json:"delay" binding:"required"` //秒
+	Body  string `json:"body" binding:"required"`
+}
 
 // 定时器数量和bucket数量相同一一对应
 var timers []*time.Ticker
 
 // Push 入队
 func Push(c *gin.Context) {
-	message := "Push"
-	c.String(http.StatusOK, message)
+	var jobP jobPush
+
+	if err := c.ShouldBindJSON(&jobP); err != nil {
+		SendResponse(c, errno.ErrBind, nil)
+		return
+	}
+	var job Job
+	job.Topic = strings.TrimSpace(jobP.Topic)
+	job.Body = strings.TrimSpace(jobP.Body)
+	if job.Topic == "" {
+		SendResponse(c, errno.ErrValidationTopic, nil)
+		return
+	}
+	if jobP.Delay <= 0 || jobP.Delay > (1<<31) {
+		SendResponse(c, errno.ErrValidationDelay, nil)
+		return
+	}
+	if job.Body == "" {
+		SendResponse(c, errno.ErrValidationBody, nil)
+		return
+	}
+	job.Delay = time.Now().Unix() + jobP.Delay
+	u, err := uuid.NewV4()
+	if err != nil {
+		SendResponse(c, errno.InternalServerError, err)
+		logs.Error(err)
+		return
+	}
+	job.ID = viper.GetString("jobKeyPrefix") + u.String()
+	logs.Info(job)
+	err = putJob(job.ID, job)
+	if err != nil {
+		SendResponse(c, errno.InternalServerError, err)
+		logs.Error(err)
+		return
+	}
+	SendResponse(c, errno.OK, nil)
+	return
 }
 
 // Pop 出队

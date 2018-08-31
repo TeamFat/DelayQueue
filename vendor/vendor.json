@@ -147,6 +147,12 @@
 			"revisionTime": "2018-07-24T18:49:33Z"
 		},
 		{
+			"checksumSHA1": "+RPbt/bqx8qmTbdc2bL0cjCbVNg=",
+			"path": "github.com/satori/go.uuid",
+			"revision": "36e9d2ebbde5e3f13ab2e25625fd453271d6522e",
+			"revisionTime": "2018-01-03T17:44:51Z"
+		},
+		{
 			"checksumSHA1": "hBWL5QkBzF3+oa5fQtLwnH7Vdi4=",
 			"path": "github.com/shirou/gopsutil/cpu",
 			"revision": "ef54649286408053c0620d366dc06ead7d7cae5a",
