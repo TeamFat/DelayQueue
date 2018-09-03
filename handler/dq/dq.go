@@ -3,7 +3,6 @@ package dq
 import (
 	"fmt"
 	"hash/crc32"
-	"net/http"
 	"strings"
 	"time"
 
@@ -19,6 +18,11 @@ type jobPush struct {
 	Topic string `json:"topic" binding:"required"`
 	Delay int64  `json:"delay" binding:"required"` //秒
 	Body  string `json:"body" binding:"required"`
+}
+
+type jobPop struct {
+	Topic   string `json:"topic" binding:"required"`
+	Timeout int    `json:"timeout"`
 }
 
 // 定时器数量和bucket数量相同一一对应
@@ -77,8 +81,46 @@ func Push(c *gin.Context) {
 
 // Pop 出队
 func Pop(c *gin.Context) {
-	message := "Push"
-	c.String(http.StatusOK, message)
+	var jobP jobPop
+
+	if err := c.ShouldBindJSON(&jobP); err != nil {
+		handler.SendResponse(c, errno.ErrBind, nil)
+		return
+	}
+	logs.Info(jobP)
+	if jobP.Timeout == 0 {
+		jobP.Timeout = viper.GetInt("queueBlockTimeout")
+	}
+	logs.Info(jobP)
+	topics := strings.Split(jobP.Topic, ",")
+	jobID, err := blockPopFromReadyQueue(topics, jobP.Timeout)
+	if err != nil {
+		handler.SendResponse(c, errno.InternalServerError, err)
+		logs.Error(err)
+		return
+	}
+	if jobID == "" {
+		handler.SendResponse(c, errno.OK, nil)
+		return
+	}
+	job, err := getJob(jobID)
+	if err != nil {
+		handler.SendResponse(c, errno.InternalServerError, err)
+		logs.Error(err)
+		return
+	}
+	if job == nil {
+		handler.SendResponse(c, errno.OK, nil)
+		return
+	}
+	err = removeJob(job.ID)
+	if err != nil {
+		handler.SendResponse(c, errno.InternalServerError, err)
+		logs.Error(err)
+		return
+	}
+	handler.SendResponse(c, errno.OK, job)
+	return
 }
 
 // Init 延时队列初始化

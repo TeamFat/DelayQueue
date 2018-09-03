@@ -6,6 +6,7 @@ maxPingCount: 10                # pingServer函数try的次数
 bucketKeyPrefix: DelayBucket_   # redis键前缀
 queueKeyPrefix: DelayQueue_     # reids键前缀
 jobKeyPrefix: DelayJob_         # redis键前缀
+queueBlockTimeout: 10           # blpop block timeout(秒)
 bucketCount: 4                  # bucket数量
 redis:
   redisInfo: 127.0.0.1:6379     # redis ip:port
