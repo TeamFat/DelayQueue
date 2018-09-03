@@ -108,5 +108,43 @@ func waitTicker(timer *time.Ticker, bucketName string) {
 
 // 扫描bucket, 取出延迟时间小于当前时间的Job
 func tickHandler(t time.Time, bucketName string) {
-	//logs.Info(t, bucketName)
+	for {
+		bucketItem, err := getFromBucket(bucketName)
+		if err != nil {
+			logs.Error("扫描bucket错误", bucketName, err.Error())
+			return
+		}
+
+		// 集合为空
+		if bucketItem == nil {
+			return
+		}
+
+		// 延迟时间未到
+		if bucketItem.timestamp > t.Unix() {
+			return
+		}
+
+		// 延迟时间小于等于当前时间, 取出Job元信息并放入ready queue
+		job, err := getJob(bucketItem.jobID)
+		if err != nil {
+			logs.Error("获取Job元信息失败", bucketName, err.Error())
+			continue
+		}
+
+		// job元信息不存在, 从bucket中删除
+		if job == nil {
+			removeFromBucket(bucketName, bucketItem.jobID)
+			continue
+		}
+
+		err = pushToReadyQueue(job.Topic, bucketItem.jobID)
+		if err != nil {
+			logs.Error("JobId放入ready queue失败", bucketName, job, err.Error())
+			continue
+		}
+
+		// 从bucket中删除
+		removeFromBucket(bucketName, bucketItem.jobID)
+	}
 }
