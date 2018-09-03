@@ -1,12 +1,12 @@
 package router
 
 import (
-	"net/http"
-
 	"github.com/TeamFat/DelayQueue/handler/dq"
 	"github.com/TeamFat/DelayQueue/handler/sd"
 	"github.com/TeamFat/DelayQueue/router/middleware"
 
+	"github.com/TeamFat/DelayQueue/handler"
+	"github.com/TeamFat/DelayQueue/pkg/errno"
 	"github.com/gin-gonic/gin"
 )
 
@@ -14,13 +14,15 @@ import (
 func Load(g *gin.Engine, mw ...gin.HandlerFunc) *gin.Engine {
 	// Middlewares.
 	g.Use(gin.Recovery())
-	g.Use(middleware.NoCache)
-	g.Use(middleware.Options)
+	//g.Use(middleware.NoCache)
+	//g.Use(middleware.Options)
 	g.Use(middleware.Secure)
 	g.Use(mw...)
 	// 404 Handler.
 	g.NoRoute(func(c *gin.Context) {
-		c.String(http.StatusNotFound, "The incorrect API route.")
+		//c.String(http.StatusNotFound, "The incorrect API route.")
+		handler.SendResponse(c, errno.StatusNotFound, nil)
+		return
 	})
 
 	// The health check handlers

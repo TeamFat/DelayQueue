@@ -34,7 +34,7 @@ func getJob(key string) (*Job, error) {
 }
 
 // 添加Job
-func putJob(key string, job Job) error {
+func putJob(key string, job *Job) error {
 	value, err := msgpack.Marshal(job)
 	if err != nil {
 		return err

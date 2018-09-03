@@ -36,7 +36,7 @@ func Push(c *gin.Context) {
 		handler.SendResponse(c, errno.ErrBind, nil)
 		return
 	}
-	var job Job
+	job := &Job{}
 	job.Topic = strings.TrimSpace(jobP.Topic)
 	job.Body = strings.TrimSpace(jobP.Body)
 	if job.Topic == "" {
