@@ -18,7 +18,7 @@
 ## 运行
 `./DelayQueue`  
 > HTTP Server监听`0.0.0.0:8080`, Redis连接地址`127.0.0.1:6379`, 数据库编号`2`, 数据库密码`123456`
-具体配置见conf/config.yaml,按需修改
+具体配置见conf/config.yaml,按需修改
 
 ## HTTP接口
 * 请求方法 `POST`   
