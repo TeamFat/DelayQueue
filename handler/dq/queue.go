@@ -6,10 +6,10 @@ import (
 )
 
 // 添加JobId到队列中
-func pushToReadyQueue(queueName string, jobId string) error {
+func pushToReadyQueue(queueName string, jobID string) error {
 	queueName = viper.GetString("queueKeyPrefix") + queueName
 
-	_, err := redis.ExecRedisCommand("RPUSH", queueName, jobId)
+	_, err := redis.ExecRedisCommand("RPUSH", queueName, jobID)
 
 	return err
 }

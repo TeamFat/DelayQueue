@@ -7,7 +7,7 @@ import (
 	"strings"
 	"time"
 
-	. "github.com/TeamFat/DelayQueue/handler"
+	"github.com/TeamFat/DelayQueue/handler"
 	"github.com/TeamFat/DelayQueue/pkg/errno"
 	"github.com/astaxie/beego/logs"
 	"github.com/gin-gonic/gin"
@@ -29,28 +29,28 @@ func Push(c *gin.Context) {
 	var jobP jobPush
 
 	if err := c.ShouldBindJSON(&jobP); err != nil {
-		SendResponse(c, errno.ErrBind, nil)
+		handler.SendResponse(c, errno.ErrBind, nil)
 		return
 	}
 	var job Job
 	job.Topic = strings.TrimSpace(jobP.Topic)
 	job.Body = strings.TrimSpace(jobP.Body)
 	if job.Topic == "" {
-		SendResponse(c, errno.ErrValidationTopic, nil)
+		handler.SendResponse(c, errno.ErrValidationTopic, nil)
 		return
 	}
 	if jobP.Delay <= 0 || jobP.Delay > (1<<31) {
-		SendResponse(c, errno.ErrValidationDelay, nil)
+		handler.SendResponse(c, errno.ErrValidationDelay, nil)
 		return
 	}
 	if job.Body == "" {
-		SendResponse(c, errno.ErrValidationBody, nil)
+		handler.SendResponse(c, errno.ErrValidationBody, nil)
 		return
 	}
 	job.Delay = time.Now().Unix() + jobP.Delay
 	u, err := uuid.NewV4()
 	if err != nil {
-		SendResponse(c, errno.InternalServerError, err)
+		handler.SendResponse(c, errno.InternalServerError, err)
 		logs.Error(err)
 		return
 	}
@@ -58,7 +58,7 @@ func Push(c *gin.Context) {
 	logs.Info(job)
 	err = putJob(job.ID, job)
 	if err != nil {
-		SendResponse(c, errno.InternalServerError, err)
+		handler.SendResponse(c, errno.InternalServerError, err)
 		logs.Error(err)
 		return
 	}
@@ -67,11 +67,11 @@ func Push(c *gin.Context) {
 	bucketName := fmt.Sprintf(viper.GetString("bucketKeyPrefix")+"%d", i+1)
 	err = pushToBucket(bucketName, job.Delay, job.ID)
 	if err != nil {
-		SendResponse(c, errno.InternalServerError, err)
+		handler.SendResponse(c, errno.InternalServerError, err)
 		logs.Error(err)
 		return
 	}
-	SendResponse(c, errno.OK, nil)
+	handler.SendResponse(c, errno.OK, nil)
 	return
 }
 
