@@ -29,7 +29,7 @@ func ConnRedis() error {
 					return nil, err
 				}
 			}
-			if _, err := c.Do("SELECT", viper.GetInt("redis.db")); err != nil {
+			if _, err := c.Do("SELECT", viper.GetInt("redis.redisDb")); err != nil {
 				c.Close()
 				return nil, err
 			}

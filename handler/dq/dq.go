@@ -2,6 +2,7 @@ package dq
 
 import (
 	"fmt"
+	"hash/crc32"
 	"net/http"
 	"strings"
 	"time"
@@ -61,6 +62,15 @@ func Push(c *gin.Context) {
 		logs.Error(err)
 		return
 	}
+	crc32q := crc32.MakeTable(0xD5828281)
+	i := crc32.Checksum([]byte(job.Body), crc32q) % uint32(viper.GetInt("bucketCount"))
+	bucketName := fmt.Sprintf(viper.GetString("bucketKeyPrefix")+"%d", i+1)
+	err = pushToBucket(bucketName, job.Delay, job.ID)
+	if err != nil {
+		SendResponse(c, errno.InternalServerError, err)
+		logs.Error(err)
+		return
+	}
 	SendResponse(c, errno.OK, nil)
 	return
 }
@@ -98,5 +108,5 @@ func waitTicker(timer *time.Ticker, bucketName string) {
 
 // 扫描bucket, 取出延迟时间小于当前时间的Job
 func tickHandler(t time.Time, bucketName string) {
-	logs.Info(t, bucketName)
+	//logs.Info(t, bucketName)
 }
