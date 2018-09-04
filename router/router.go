@@ -34,10 +34,10 @@ func Load(g *gin.Engine, mw ...gin.HandlerFunc) *gin.Engine {
 		svcd.GET("/ram", sd.RAMCheck)
 	}
 
-	dqrouter := g.Group("queue")
+	dqrouter := g.Group("/queue")
 	{
-		dqrouter.POST("push", dq.Push)
-		dqrouter.POST("pop", dq.Pop)
+		dqrouter.POST("/push", dq.Push)
+		dqrouter.POST("/pop", dq.Pop)
 	}
 
 	return g
