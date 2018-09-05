@@ -22,15 +22,19 @@ func init() {
 	router = gin.Default()
 	router.Use(connRedis)
 	router.POST("/queue/push", Push)
+	router.POST("/queue/pop", Pop)
 }
 
 func connRedis(c *gin.Context) {
 	viper.SetDefault("bucketKeyPrefix", "Test_DelayBucket_")
 	viper.SetDefault("jobKeyPrefix", "Test_DelayJob_")
+	viper.SetDefault("queueKeyPrefix", "Test_DelayQueue_")
 	viper.SetDefault("redis.redisInfo", "127.0.0.1:6379")
 	viper.SetDefault("redis.redisAuth", 123456)
 	viper.SetDefault("redis.redisDb", 2)
 	viper.SetDefault("bucketCount", 4)
+	viper.SetDefault("redis.maxIdle", 2)
+	viper.SetDefault("redis.idleTimeout", 60)
 	redis.ConnRedis()
 }
 
@@ -64,8 +68,32 @@ func TestPush(t *testing.T) {
 
 	param := make(map[string]interface{})
 	param["topic"] = "order"
-	param["delay"] = 30
+	param["delay"] = 1
 	param["body"] = "{\"uid\": 10829378,\"created\": 1498657365 }"
+
+	// 发起post请求，以Json形式传递参数
+	body := PostJson(uri, param, router)
+	fmt.Printf("response:%v\n", string(body))
+
+	// 解析响应，判断响应是否与预期一致
+	response := &handler.Response{}
+	if err := json.Unmarshal(body, response); err != nil {
+		t.Errorf("解析响应出错，err:%v\n", err)
+	}
+	if response.Code != 0 {
+		t.Errorf("响应数据不符:%v\n", response.Message)
+	}
+}
+
+// TestPop 测试以Json形式访问出队的接口
+func TestPop(t *testing.T) {
+	initTimers()
+	// 初始化请求地址和请求参数
+	uri := "/queue/pop"
+
+	param := make(map[string]interface{})
+	param["topic"] = "order"
+	param["timeout"] = 4
 
 	// 发起post请求，以Json形式传递参数
 	body := PostJson(uri, param, router)
